@@ -85,7 +85,22 @@ class EpicKitchensDataset(data.Dataset, ABC):
         # Remember that the returned array should have size              #
         #           num_clip x num_frames_per_clip                       #
         ##################################################################
-        raise NotImplementedError("You should implement _get_val_indices")
+        num_clips = 5
+        num_frames = record.num_frames[modality]
+        num_frames_per_clip = self.num_frames_per_clip[modality]
+        indices = []
+        
+        frame_interval = (num_frames - num_frames_per_clip) // (num_clips - 1)
+
+        for i in range(num_clips):
+            start = i * frame_interval
+            end = start + num_frames_per_clip
+            clip_indices = list(range(start, end))
+            indices.extend(clip_indices)
+        
+        return indices
+    
+        #raise NotImplementedError("You should implement _get_val_indices")
 
     def __getitem__(self, index):
 
